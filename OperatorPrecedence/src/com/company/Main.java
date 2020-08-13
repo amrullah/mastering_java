@@ -1,5 +1,7 @@
 package com.company;
 
+import java.util.Collections;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -16,6 +18,11 @@ public class Main {
 
         if (!hasNoRemainder) {
             System.out.println("Got some remainder!");
+        }
+
+        String messaeg = "Hello";
+        for (int i=0; i<messaeg.length(); i++) {
+            System.out.println(messaeg.charAt(i+1));
         }
     }
 }
