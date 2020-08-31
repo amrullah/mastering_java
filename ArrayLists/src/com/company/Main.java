@@ -17,9 +17,6 @@ public class Main {
             scanner.nextLine();
 
             switch (choice) {
-                case 0:
-                    printInstructions();
-                    break;
                 case 1:
                     groceryList.printGroceryList();
                     break;
@@ -36,6 +33,8 @@ public class Main {
                     searchItem();
                     break;
                 case 6:
+                    processArrayList();
+                case 7:
                     quit = true;
                     break;
                 default:
@@ -44,11 +43,21 @@ public class Main {
         }
     }
 
+    private static void processArrayList() {
+        ArrayList<String> newArray = new ArrayList<>();
+        newArray.addAll(groceryList.getGroceryList());
+
+        ArrayList<String> oneMoreArray = new ArrayList<>(groceryList.getGroceryList());
+
+        String[] myArray = new String[groceryList.getGroceryList().size()];
+        myArray = groceryList.getGroceryList().toArray(myArray);
+    }
+
     private static void searchItem() {
         System.out.print("Please enter the item to search for: ");
         String searchTerm = scanner.nextLine();
 
-        if (groceryList.findItem(searchTerm) != null) {
+        if (groceryList.exists(searchTerm)) {
             System.out.printf("Found %1$s in the grocery list\n", searchTerm);
         } else {
             System.out.printf("%1$s is not in the grocery list\n", searchTerm);
@@ -56,27 +65,25 @@ public class Main {
     }
 
     private static void removeItem() {
-        System.out.print("Please enter the item number to remove: ");
-        int itemNumber = scanner.nextInt();
-        scanner.nextLine();
+        System.out.print("Please enter the item to remove: ");
+        String item = scanner.nextLine();
 
-        groceryList.removeGroceryItem(itemNumber-1);
+        groceryList.removeGroceryItem(item);
         System.out.println("Item has been removed");
     }
 
     private static void modifyItem() {
-        System.out.print("Please enter the item number to modify: ");
-        int itemNumber = scanner.nextInt();
-        scanner.nextLine();
+        System.out.print("Please enter the item to replace: ");
+        String oldItem = scanner.nextLine();
 
         System.out.print("Enter replacement item: ");
         String newItem = scanner.nextLine();
 
-        groceryList.modifyGroceryItem(itemNumber-1, newItem);
+        groceryList.modifyGroceryItem(oldItem, newItem);
     }
 
     private static void addItem() {
-        System.out.println("Please enter the grocery item:");
+        System.out.println("Please enter the grocery item to add:");
         groceryList.addGroceryItem(scanner.nextLine());
     }
 
