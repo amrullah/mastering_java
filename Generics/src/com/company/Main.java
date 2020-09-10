@@ -30,7 +30,7 @@ public class Main {
         System.out.println(manchesterUnited.numPlayers());
 
         ArrayList<Team<SoccerPlayer>> teams = new ArrayList<>();
-//        teams.add(manchesterUnited);
+//        teams.add(manchesterUnited);  // would have been able to add if it was ArrayList<Team> above
 //        teams.add(puneWarriors);
         teams.add(punjabKings);
         teams.add(gujaratLions);
