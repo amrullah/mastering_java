@@ -19,6 +19,11 @@ public class Main {
 
         main.theatre.sortSeatsAsc();
         main.theatre.printSeats();
+
+        main.theatre.sortSeatsByPrice();
+        main.theatre.reverseSeats();
+        main.theatre.printSeats();
+
     }
 
     public Main() {
