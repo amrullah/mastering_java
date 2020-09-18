@@ -1,5 +1,8 @@
 package com.company;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Main {
 
     private final Theatre theatre;
@@ -24,6 +27,28 @@ public class Main {
         main.theatre.reverseSeats();
         main.theatre.printSeats();
 
+        mapDemo();
+    }
+
+    private static void mapDemo() {
+        System.out.println("----------------------------");
+        Map<String, String> languages = new HashMap<>();
+        languages.put("Java", "good language");
+        languages.put("Python", "very good language");
+        System.out.println(languages.put("Golang", "mind blowing language"));  // null
+
+        System.out.println(languages.put("Java", "breath-taking language"));  // put() returns old value for the key
+        System.out.println(languages.get("Java"));  // new value
+
+        System.out.println(languages.get("Python"));
+
+        if (languages.containsKey("Golang")) {
+            System.out.println("Golang exists in the map");
+        }
+
+        for (String key : languages.keySet()) {
+            System.out.printf("%1$s => %2$s\n", key, languages.get(key));
+        }
     }
 
     public Main() {
