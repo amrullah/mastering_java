@@ -1,11 +1,15 @@
 package com.company;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Theatre {
     private final String name;
+//    any of these will run
     private List<Seat> seats = new ArrayList<>();
+//    private Collection<Seat> seats = new ArrayList<>();
+//    private Collection<Seat> seats = new LinkedList<>();
+//    private Collection<Seat> seats = new HashSet<>();
+//    private Collection<Seat> seats = new LinkedHashSet<>();
 
     public Theatre(String name, int numRows, int seatsPerRow) {
         this.name = name;
@@ -24,19 +28,30 @@ public class Theatre {
     }
 
     public boolean reserveSeat(String seatNumber) {
-        Seat requestedSeat = null;
-        for (Seat seat : seats) {
-            if (seat.getSeatNumber().equals(seatNumber)) {
-                requestedSeat = seat;
-                break;
-            }
-        }
+        Seat requestedSeat = new Seat(seatNumber);
 
-        if (requestedSeat == null) {
+        int foundSeat = Collections.binarySearch(seats, requestedSeat, null);
+        if (foundSeat > 0) {
+            return seats.get(foundSeat).reserve();
+        } else {
             System.out.printf("There is no seat %1$s\n", seatNumber);
+            return false;
         }
 
-        return requestedSeat.reserve();
+//        for (Seat seat : seats) {
+//            System.out.print(".");
+//            if (seat.getSeatNumber().equals(seatNumber)) {
+//                requestedSeat = seat;
+//                break;
+//            }
+//        }
+//        System.out.println();
+//
+//        if (requestedSeat == null) {
+//            System.out.printf("There is no seat %1$s\n", seatNumber);
+//        }
+//
+//        return requestedSeat.reserve();
     }
 
     public void getSeats() {
@@ -45,7 +60,7 @@ public class Theatre {
         }
     }
 
-    private class Seat {
+    private class Seat implements Comparable<Seat> {
         private String seatNumber;
         private boolean reserved = false;
 
@@ -79,6 +94,10 @@ public class Theatre {
             return false;
         }
 
+        @Override
+        public int compareTo(Seat seat) {
+            return this.seatNumber.compareToIgnoreCase(seat.seatNumber);
+        }
 
         @Override
         public String toString() {
