@@ -27,6 +27,21 @@ public class Theatre {
         return name;
     }
 
+    public Seat getMinSeat() {
+        return Collections.min(seats);
+    }
+
+    public Seat getMaxSeat() {
+        return Collections.max(seats);
+    }
+
+    public void shuffleSeats() {
+        Collections.shuffle(seats);
+    }
+
+    public void sortSeatsAsc() {
+        Collections.sort(seats);
+    }
     public boolean reserveSeat(String seatNumber) {
         Seat requestedSeat = new Seat(seatNumber);
 
@@ -38,26 +53,13 @@ public class Theatre {
             return false;
         }
 
-//        for (Seat seat : seats) {
-//            System.out.print(".");
-//            if (seat.getSeatNumber().equals(seatNumber)) {
-//                requestedSeat = seat;
-//                break;
-//            }
-//        }
-//        System.out.println();
-//
-//        if (requestedSeat == null) {
-//            System.out.printf("There is no seat %1$s\n", seatNumber);
-//        }
-//
-//        return requestedSeat.reserve();
     }
 
-    public void getSeats() {
+    public void printSeats() {
         for (Seat seat : seats) {
-            System.out.println(seat);
+            System.out.print(seat + " ");
         }
+        System.out.println();
     }
 
     private class Seat implements Comparable<Seat> {

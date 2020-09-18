@@ -7,9 +7,18 @@ public class Main {
     public static void main(String[] args) {
 
         Main main = new Main();
+        main.theatre.printSeats();
+        main.attemptToReserve("H11");
+        main.attemptToReserve("H11");
 
-        main.attemptToReserve("H11");
-        main.attemptToReserve("H11");
+        main.theatre.shuffleSeats();
+        main.theatre.printSeats();
+
+        System.out.printf("First seat: %1$s\n", main.theatre.getMinSeat());
+        System.out.printf("Last seat: %1$s\n", main.theatre.getMaxSeat());
+
+        main.theatre.sortSeatsAsc();
+        main.theatre.printSeats();
     }
 
     public Main() {
