@@ -39,6 +39,7 @@ public class Main {
 
         System.out.println(languages.put("Java", "breath-taking language"));  // put() returns old value for the key
         System.out.println(languages.get("Java"));  // new value
+        languages.put("BrainF**k", "terrible language");
 
         System.out.println(languages.get("Python"));
 
@@ -48,6 +49,20 @@ public class Main {
 
         for (String key : languages.keySet()) {
             System.out.printf("%1$s => %2$s\n", key, languages.get(key));
+        }
+
+        String removedValue = languages.remove("BrainF**k");
+        System.out.printf("removed value: %1$s\n", removedValue);
+        removedValue = languages.remove("BrainF**k");
+        System.out.printf("removed value: %1$s\n", removedValue);
+
+        String result = languages.replace("Java", "Super Language");
+        System.out.printf("Result of removal of %1$s => %2$s\n", "Java", result);
+
+        if (languages.replace("Java", "Super Language", "Unbelievable language")) {
+            System.out.println("Java's value changed");
+        } else {
+            System.out.println("Java's value could not be changed");
         }
     }
 
