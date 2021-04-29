@@ -37,6 +37,10 @@ public class Main {
         };
         String sillyString = doStringStuff(uc, "Ertugrul", "Samsa");
         System.out.println(sillyString);
+
+        AnotherClass anotherClass = new AnotherClass();
+        String s = anotherClass.doSomething();
+        System.out.println(s);
     }
 
     private static void doEmployeeStuff() {
@@ -97,6 +101,8 @@ class Employee {
         return this.name;
     }
 }
+
+
 class CodeToRun implements Runnable {
     @Override
     public void run() {
@@ -107,4 +113,39 @@ class CodeToRun implements Runnable {
 
 interface UpperConcat {
     String upperAndConcat(String s1, String s2);
+}
+
+class AnotherClass {
+    public String doSomething() {
+//        UpperConcat uc = (s1, s2) -> {
+//            // not treated as a separate class. Just treated like a block of code. So the answer will be AnotherClass
+//            System.out.println("The Lambda Expression class' name is " + getClass().getSimpleName());
+//            return s1.toUpperCase() + " " + s2.toUpperCase();
+//        };
+
+        final int i = 0;  // made final so that it can be used in the anonymous class
+        {
+            UpperConcat uc = new UpperConcat() {
+                @Override
+                public String upperAndConcat(String s1, String s2) {
+                    System.out.println("i = " + i);
+                    return s1.toUpperCase() + " " + s2.toUpperCase();
+                }
+            };
+//            i++;
+            System.out.println("i = " + i);
+            System.out.println("The AnotherClass class' name is " + getClass().getSimpleName());
+            return Main.doStringStuff(uc, "Osman", "Bamsi");
+        }
+
+
+//        System.out.println("The AnotherClass class' name is " + getClass().getSimpleName());
+//        return Main.doStringStuff(new UpperConcat() {
+//            @Override
+//            public String upperAndConcat(String s1, String s2) {
+//                System.out.println("The AnotherClass class' name is " + getClass().getSimpleName());  // null
+//                return s1.toUpperCase() + " " + s2.toUpperCase();
+//            }
+//        }, "Osman", "Bamsi");
+    }
 }
