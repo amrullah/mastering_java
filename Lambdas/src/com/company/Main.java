@@ -73,6 +73,10 @@ public class Main {
 
         System.out.println(employees);
 
+        employees.forEach(employee -> {  // this is equivalent to "for (Employee employee : employees) {"
+            System.out.println(employee.getName());
+            System.out.println(employee.getAge());
+        });
         System.out.println("--------------------------------");
         for (Employee employee : employees) {
             // this works because the loop variable employee is effectively final inside the for each block
