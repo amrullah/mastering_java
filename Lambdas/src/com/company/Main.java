@@ -72,6 +72,24 @@ public class Main {
         employees.sort(Comparator.comparing(Employee::getName));
 
         System.out.println(employees);
+
+        System.out.println("--------------------------------");
+        for (Employee employee : employees) {
+            // this works because the loop variable employee is effectively final inside the for each block
+            System.out.println(employee.getName());
+            new Thread(() -> System.out.println(employee.getAge())).start();
+        }
+
+
+        System.out.println("--------------------------------");
+        // declaring employee variable outside makes it effectively non-final
+        Employee employee;
+        for (int i = 0; i < employees.size(); i++) {
+            employee = employees.get(i);
+            System.out.println(employee.getName());
+            // you will get: java: local variables referenced from a lambda expression must be final or effectively final
+//            new Thread(() -> System.out.println(employee.getAge())).start();
+        }
     }
 
     public static String doStringStuff(UpperConcat uc, String s1, String s2) {
@@ -123,7 +141,7 @@ class AnotherClass {
 //            return s1.toUpperCase() + " " + s2.toUpperCase();
 //        };
 
-        final int i = 0;  // made final so that it can be used in the anonymous class
+        final int i = 0;  // needs to be final so that it can be used in the anonymous class
         {
             UpperConcat uc = new UpperConcat() {
                 @Override
@@ -138,6 +156,14 @@ class AnotherClass {
             return Main.doStringStuff(uc, "Osman", "Bamsi");
         }
 
+//        int j = 0;
+////        j++;  // this won't be allowed since the variable is being used in lambda
+//        UpperConcat uc2 = (s1, s2) -> {
+//            System.out.println("j = " + j);  // this will work fine
+//            return s1.toUpperCase() + " " + s2.toUpperCase();
+//        };
+
+        // can't use s1 and s2 outside the lambda body either
 
 //        System.out.println("The AnotherClass class' name is " + getClass().getSimpleName());
 //        return Main.doStringStuff(new UpperConcat() {
@@ -147,5 +173,20 @@ class AnotherClass {
 //                return s1.toUpperCase() + " " + s2.toUpperCase();
 //            }
 //        }, "Osman", "Bamsi");
+    }
+
+    public void printValue() {
+        int number = 25;
+
+        Runnable r = () -> {
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("The Value is " + number);  // will print 25 even if the outer scope is long destroyed
+        };
+
+        new Thread(r).start();
     }
 }
