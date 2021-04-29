@@ -33,13 +33,24 @@ public class Main {
 
         List<Employee> employees = Arrays.asList(john, tim, sunny, jack, snow);
 
-//        Collections.sort(employees, (e1, e2) -> {
+//        Collections.sort(employees, new Comparator<Employee>() {
+//            @Override
+//            public int compare(Employee employee1, Employee employee2) {
+//                return employee1.getName().compareTo(employee2.getName());
+//            }
+//        });
+        // or
+//        Collections.sort(employees, (e1, e2) -> {  // can leave the types out
 //            return e1.getName().compareTo(e2.getName());
 //        });
         // or
-        Collections.sort(employees, (e1, e2) -> e1.getName().compareTo(e2.getName()));
+//        Collections.sort(employees, (e1, e2) -> e1.getName().compareTo(e2.getName()));
         // or
 //        Collections.sort(employees, Comparator.comparing(Employee::getName));
+        // or
+//        employees.sort((e1, e2) -> e1.getName().compareTo(e2.getName()));
+        // or
+        employees.sort(Comparator.comparing(Employee::getName));
 
         System.out.println(employees);
     }
