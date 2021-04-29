@@ -2,8 +2,10 @@ package com.company;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class Main {
 
@@ -31,7 +33,7 @@ public class Main {
         printEmployeesByAge(employees, employee -> employee.getAge() <= 30);
 
         System.out.println("\nEmployees above 45:");
-        printEmployeesByAge(employees, new Predicate<Employee>() {
+        printEmployeesByAge(employees, new Predicate<Employee>() {  // also possible this way
             @Override
             public boolean test(Employee employee) {
                 return employee.getAge() > 45;
@@ -46,6 +48,14 @@ public class Main {
         System.out.println(gt15.test(20));
 
         System.out.println(gt15.and(lt100).test(60));  // chaining predicates
+
+        // Supplier interface
+        Supplier<Integer> randomSupplier = () -> (new Random()).nextInt(1000);
+
+        System.out.println("\nRandom Numbers:");
+        for (int i=0; i < 10; i++) {
+            System.out.println(randomSupplier.get());
+        }
     }
 
     private static void printEmployeesByAge(List<Employee> employees, Predicate<Employee> agePredicate) {
