@@ -71,7 +71,7 @@ public class Main {
         employees.forEach(employee -> System.out.println("Last Name: " + getLastName.apply(employee)));
 
         // Chaining Functions
-
+        System.out.println();
         Function<String, String> getFirstName = name -> name.split(" ")[0];
         Function<Employee, String> getUpperCase = employee -> employee.getName().toUpperCase();
 
@@ -85,6 +85,13 @@ public class Main {
 
         String upperName = getUpperCase.apply(employees.get(0));
         System.out.println(concatAge.apply(upperName, employees.get(0)));
+
+
+        // Unary operators
+        System.out.println();
+        IntUnaryOperator incBy5 = i -> i + 5;
+        System.out.println(incBy5.applyAsInt(10));
+
     }
 
     private static void printEmployeesByAge(List<Employee> employees, Predicate<Employee> agePredicate) {
