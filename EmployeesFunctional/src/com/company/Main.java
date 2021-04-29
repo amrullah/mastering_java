@@ -3,10 +3,7 @@ package com.company;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.function.Function;
-import java.util.function.IntPredicate;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
+import java.util.function.*;
 
 public class Main {
 
@@ -81,7 +78,13 @@ public class Main {
         Function<Employee, String> chainedFunction = getUpperCase.andThen(getFirstName);
         System.out.println(chainedFunction.apply(employees.get(0)));
 
-        
+        // BiFunction
+        BiFunction<String, Employee, String>  concatAge = (String name, Employee employee) -> {
+            return name.concat(" " + employee.getAge());
+        };
+
+        String upperName = getUpperCase.apply(employees.get(0));
+        System.out.println(concatAge.apply(upperName, employees.get(0)));
     }
 
     private static void printEmployeesByAge(List<Employee> employees, Predicate<Employee> agePredicate) {
