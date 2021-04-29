@@ -92,6 +92,14 @@ public class Main {
         IntUnaryOperator incBy5 = i -> i + 5;
         System.out.println(incBy5.applyAsInt(10));
 
+        // Consumer chaining
+        Consumer<String> c1 = s -> s.toUpperCase();
+        Consumer<String> c2 = s -> System.out.println(s);
+
+        // the result of c1.accept() is lost, since consumers don't return anything.
+        c1.andThen(c2).accept("Hello World");  // Hello World
+
+
     }
 
     private static void printEmployeesByAge(List<Employee> employees, Predicate<Employee> agePredicate) {
