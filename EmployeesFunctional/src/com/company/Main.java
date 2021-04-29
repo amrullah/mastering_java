@@ -3,6 +3,7 @@ package com.company;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -13,9 +14,9 @@ public class Main {
         Employee john = new Employee("Ertugrul Ghazi", 30);
         Employee tim = new Employee("Saadetin Kobek", 50);
         Employee sunny = new Employee("Gundogdu Bey", 33);
-        Employee jack = new Employee("Tughtekin", 30);
+        Employee jack = new Employee("Tughtekin Ahmak", 30);
         Employee snow = new Employee("Suleiman Shah", 55);
-        Employee jay = new Employee("Tangut", 23);
+        Employee jay = new Employee("Tangut Wicked", 23);
 
         List<Employee> employees = Arrays.asList(john, tim, sunny, jack, snow, jay);
 
@@ -56,6 +57,31 @@ public class Main {
         for (int i=0; i < 10; i++) {
             System.out.println(randomSupplier.get());
         }
+
+        // Function interface
+
+        System.out.println();
+        employees.forEach(employee -> {
+            String lastName = employee.getName().split(" ")[1];
+            System.out.println("Last Name: " + lastName);
+        });
+
+        // above can be achieved using Function interface, as shown below:
+        System.out.println();
+
+        Function<Employee, String> getLastName = employee -> employee.getName().split(" ")[1];
+
+        employees.forEach(employee -> System.out.println("Last Name: " + getLastName.apply(employee)));
+
+        // Chaining Functions
+
+        Function<String, String> getFirstName = name -> name.split(" ")[0];
+        Function<Employee, String> getUpperCase = employee -> employee.getName().toUpperCase();
+
+        Function<Employee, String> chainedFunction = getUpperCase.andThen(getFirstName);
+        System.out.println(chainedFunction.apply(employees.get(0)));
+
+        
     }
 
     private static void printEmployeesByAge(List<Employee> employees, Predicate<Employee> agePredicate) {
@@ -65,4 +91,5 @@ public class Main {
             }
         }
     }
+
 }
