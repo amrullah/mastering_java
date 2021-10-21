@@ -11,16 +11,13 @@ public class Locations implements Map<Integer, Location> {
     private static final Map<Integer, Location> locations = new HashMap<>();
 
     public static void main(String[] args) throws IOException {
-        FileWriter localFile = new FileWriter("locations.txt");
 
-        try {
+        // try with resources illustration
+        try (FileWriter localFile = new FileWriter("locations.txt")) {
             for (Location location : locations.values()) {
                 localFile.write(location.getLocationID() + "," + location.getDescription() + "\n");
             }
-        } finally {
-            System.out.println("In finally block");
-            localFile.close();
-        }
+        } // no finally block needed to close the FileWriter object
 
     }
     static {
