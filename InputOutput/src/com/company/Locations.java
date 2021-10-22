@@ -1,27 +1,30 @@
 package com.company;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class Locations implements Map<Integer, Location> {
     private static final Map<Integer, Location> locations = new HashMap<>();
 
     public static void main(String[] args) throws IOException {
-
-        // try with resources illustration
-        try (FileWriter locFile = new FileWriter("locations.txt");
-            FileWriter dirFile = new FileWriter("directions.txt")) {
+        try (DataOutputStream locFile =
+                     new DataOutputStream(
+                             new BufferedOutputStream(
+                                     new FileOutputStream("locations.dat")))
+        ) {
             for (Location location : locations.values()) {
-                locFile.write(location.getLocationID() + "," + location.getDescription() + "\n");
+                locFile.writeInt(location.getLocationID());
+                locFile.writeUTF(location.getDescription());
+                locFile.writeByte(0x1F);
+                locFile.writeInt(location.getExits().size() - 1);
                 for (String direction : location.getExits().keySet()) {
-                    dirFile.write(location.getLocationID() + "," + direction + "," + location.getExits().get(direction) + "\n");
+                    if (!direction.equalsIgnoreCase("Q")) {
+                        locFile.writeUTF(direction);
+                        locFile.writeInt(location.getExits().get(direction));
+                    }
                 }
             }
-        } // no finally block needed to close the FileWriter object
-
+        }
     }
     static {
         try (Scanner scanner = new Scanner(new FileReader("locations.txt"))){
@@ -37,6 +40,7 @@ public class Locations implements Map<Integer, Location> {
             e.printStackTrace();
         }
 
+        // buffered reader is used to reduce the number of disk seeks
         try (Scanner scanner = new Scanner(new BufferedReader(new FileReader("directions.txt"))) ){
             scanner.useDelimiter(",");
             while (scanner.hasNextLine()) {
