@@ -20,9 +20,15 @@ public class Main {
             public void run() {
                 super.run();
                 System.out.println(ANSI_RED + "Hello from Anonymous Runnable");;
+                try {
+                    anotherThread.join(2*1000);
+                    System.out.println(ANSI_RED + "AnotherThread terminated/timed out. Now I'll continue");
+                } catch (InterruptedException e) {
+                    System.out.println(ANSI_RED + "I couldn't wait after all. I was interrupted");
+                }
             }
         }).start();
-
+//        anotherThread.interrupt();
         System.out.println(ANSI_PURPLE + "Hello again from the main thread.");
         // anotherThread.start();  // this will give IllegalThreadStateException
     }
