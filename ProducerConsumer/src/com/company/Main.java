@@ -3,6 +3,7 @@ package com.company;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Main {
@@ -77,7 +78,7 @@ class MyConsumer implements Runnable {
 
     public void run() {
         while (true) {
-            if (bufferLock.tryLock()) {
+            if (bufferLock.tryLock(1000, TimeUnit.MILLISECONDS)) {
                 try {
                     if (buffer.isEmpty()) {
                         continue;
