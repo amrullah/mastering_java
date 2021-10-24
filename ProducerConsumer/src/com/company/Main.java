@@ -11,7 +11,7 @@ public class Main {
 
     public static void main(String[] args) {
         List<String> buffer = new ArrayList<>();
-        ReentrantLock bufferLock = new ReentrantLock();
+        ReentrantLock bufferLock = new ReentrantLock(true);  // try to let the longest waiting thread acquire the lock
         MyProducer producer = new MyProducer(buffer, bufferLock, ThreadColor.ANSI_YELLOW);
         MyConsumer consumer1 = new MyConsumer(buffer, bufferLock, ThreadColor.ANSI_PURPLE);
         MyConsumer consumer2 = new MyConsumer(buffer, bufferLock, ThreadColor.ANSI_CYAN);
@@ -78,20 +78,25 @@ class MyConsumer implements Runnable {
 
     public void run() {
         while (true) {
-            if (bufferLock.tryLock(1000, TimeUnit.MILLISECONDS)) {
-                try {
-                    if (buffer.isEmpty()) {
-                        continue;
+
+            try {
+                if (bufferLock.tryLock(1000, TimeUnit.MILLISECONDS)) {
+                    try {
+                        if (buffer.isEmpty()) {
+                            continue;
+                        }
+                        if (buffer.get(0).equals(Main.EOF)) {
+                            System.out.println(color + "Exiting");
+                            break;
+                        } else {
+                            System.out.println(color + "Removed " + buffer.remove(0));
+                        }
+                    } finally {
+                        bufferLock.unlock();
                     }
-                    if (buffer.get(0).equals(Main.EOF)) {
-                        System.out.println(color + "Exiting");
-                        break;
-                    } else {
-                        System.out.println(color + "Removed " + buffer.remove(0));
-                    }
-                } finally {
-                    bufferLock.unlock();
                 }
+            } catch (InterruptedException e) {
+                System.out.println("Interrupted");
             }
         }
 
