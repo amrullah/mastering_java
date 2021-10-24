@@ -3,7 +3,7 @@ package com.company;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Main {
@@ -16,9 +16,19 @@ public class Main {
         MyConsumer consumer1 = new MyConsumer(buffer, bufferLock, ThreadColor.ANSI_PURPLE);
         MyConsumer consumer2 = new MyConsumer(buffer, bufferLock, ThreadColor.ANSI_CYAN);
 
-        new Thread(producer).start();
-        new Thread(consumer1).start();
-        new Thread(consumer2).start();
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
+        executorService.execute(producer);
+        executorService.execute(consumer1);
+        executorService.execute(consumer2);
+
+        Future<String> stringFuture = executorService.submit(() -> "This is the Callable Result");
+
+        try {
+            System.out.println(ThreadColor.ANSI_WHITE + "String Future result: " +stringFuture.get());
+        } catch (InterruptedException | ExecutionException e) {
+            System.out.println("Something went wrong trying to fetch the future result");
+        }
+        executorService.shutdown();  // don't forget this
     }
 }
 
