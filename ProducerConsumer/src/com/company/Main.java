@@ -10,11 +10,11 @@ public class Main {
     public static final String EOF = "EOF";
 
     public static void main(String[] args) {
-        List<String> buffer = new ArrayList<>();
-        ReentrantLock bufferLock = new ReentrantLock(true);  // try to let the longest waiting thread acquire the lock
-        MyProducer producer = new MyProducer(buffer, bufferLock, ThreadColor.ANSI_YELLOW);
-        MyConsumer consumer1 = new MyConsumer(buffer, bufferLock, ThreadColor.ANSI_PURPLE);
-        MyConsumer consumer2 = new MyConsumer(buffer, bufferLock, ThreadColor.ANSI_CYAN);
+        ArrayBlockingQueue<String> buffer = new ArrayBlockingQueue<>(6);
+
+        MyProducer producer = new MyProducer(buffer, ThreadColor.ANSI_YELLOW);
+        MyConsumer consumer1 = new MyConsumer(buffer, ThreadColor.ANSI_PURPLE);
+        MyConsumer consumer2 = new MyConsumer(buffer, ThreadColor.ANSI_CYAN);
 
         ExecutorService executorService = Executors.newFixedThreadPool(5);
         executorService.execute(producer);
@@ -33,15 +33,13 @@ public class Main {
 }
 
 class MyProducer implements Runnable {
-    private final List<String> buffer;
+    private final ArrayBlockingQueue<String> buffer;
     private final String color;
-    private final ReentrantLock bufferLock;
 
 
-    public MyProducer(List<String> buffer, ReentrantLock bufferLock, String color) {
+    public MyProducer(ArrayBlockingQueue<String> buffer, String color) {
         this.buffer = buffer;
         this.color = color;
-        this.bufferLock = bufferLock;
     }
 
     public void run() {
@@ -51,13 +49,7 @@ class MyProducer implements Runnable {
         for (String num : nums) {
             try {
                 System.out.println(color + "Adding... " + num);
-                bufferLock.lock();
-                try {
-                    buffer.add(num);
-                } finally {
-                    bufferLock.unlock();
-                }
-
+                buffer.put(num);
                 Thread.sleep(random.nextInt(1000));
             } catch (InterruptedException e) {
                 System.out.println("Producer was interrupted");
@@ -65,48 +57,38 @@ class MyProducer implements Runnable {
         }
 
         System.out.println(color + "Adding EOF and exiting...");
-        bufferLock.lock();
+
         try {
-            buffer.add(Main.EOF);
-        } finally {
-            bufferLock.unlock();
+            buffer.put(Main.EOF);
+            buffer.put(Main.EOF);
+        } catch (InterruptedException ignored) {
+
         }
     }
 }
 
 class MyConsumer implements Runnable {
-    private final List<String> buffer;
+    private final ArrayBlockingQueue<String> buffer;
     private final String color;
-    private final ReentrantLock bufferLock;
 
 
-    MyConsumer(List<String> buffer, ReentrantLock bufferLock, String color) {
+    MyConsumer(ArrayBlockingQueue<String> buffer, String color) {
         this.buffer = buffer;
         this.color = color;
-        this.bufferLock = bufferLock;
     }
 
     public void run() {
         while (true) {
-
             try {
-                if (bufferLock.tryLock(1000, TimeUnit.MILLISECONDS)) {
-                    try {
-                        if (buffer.isEmpty()) {
-                            continue;
-                        }
-                        if (buffer.get(0).equals(Main.EOF)) {
-                            System.out.println(color + "Exiting");
-                            break;
-                        } else {
-                            System.out.println(color + "Removed " + buffer.remove(0));
-                        }
-                    } finally {
-                        bufferLock.unlock();
-                    }
+                String num = buffer.take();
+                if (num.equals(Main.EOF)) {
+                    System.out.println(color + "Exiting");
+                    break;
+                } else {
+                    System.out.println(color + "Removed " + num);
                 }
-            } catch (InterruptedException e) {
-                System.out.println("Interrupted");
+            } catch (InterruptedException ignored){
+                System.out.println("some exception");
             }
         }
 
